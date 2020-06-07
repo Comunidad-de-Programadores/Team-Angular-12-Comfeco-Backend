@@ -52,7 +52,7 @@ app.post('/', async(req, res) => {
 app.delete('/:id', async(req, res) => {
     const idDistrito = req.params.id;
     try {
-        const districtoRemovido = await productoModel.findByIdAndRemove(idDistrito);
+        const districtoRemovido = await distritoModel.findByIdAndRemove(idDistrito);
         if (!districtoRemovido) {
             return res.status(400).json({
                 ok: true,
