@@ -76,9 +76,10 @@ app.post('/:id', async(req, res) => {
 
 app.get('/', async(req, res) => {
     const query = req.query;
+    const regexName = new RegExp(query.search, "i")
     const filters = {
         id_categoria: query.id_categoria,
-        name: query.search
+        name: regexName
     }
     Object.keys(filters).forEach(key => (filters[key] === undefined || filters[key] === '') && delete filters[key])
     let page = Number(req.query.page) || 1;
