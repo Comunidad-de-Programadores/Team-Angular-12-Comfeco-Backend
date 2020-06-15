@@ -20,7 +20,7 @@ const categoriaModel = require('../model/categoria_model');
 //Crear productos
 
 app.post('/:id', async(req, res) => {
-    const id_categoria = req.params.id;
+    const id_categoria = req.body.id_categoria;
     const body = req.body;
     if (!req.files || !req.files.img) {
         return res.status(400).json({
