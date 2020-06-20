@@ -29,7 +29,7 @@ app.post('/', async(req, res) => {
         });
     }
     try {
-        const categoriaEncontrada = categoriaModel.findById(id_categoria);
+        const categoriaEncontrada = await categoriaModel.findById(id_categoria);
         if (!categoriaEncontrada) {
             return res.status(400).json({
                 ok: false,
@@ -54,8 +54,8 @@ app.post('/', async(req, res) => {
                     error
                 });
             }
-            categoriaEncontrada.producto_number++;
-            (await categoriaEncontrada).save();
+            categoriaEncontrada.producto_number = categoriaEncontrada.producto_number + 1;
+            await categoriaEncontrada.save();
             return res.status(200).json({
                 ok: true,
                 mensaje: 'Producto guardado correctamente',
