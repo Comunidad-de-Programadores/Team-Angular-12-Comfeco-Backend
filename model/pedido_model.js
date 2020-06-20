@@ -27,4 +27,4 @@ pedidoSchema.virtual('usuario_info', {
     justOne: true,
 })
 
-module.exports = mongoose.model('Pregunta', pedidoSchema);
+module.exports = mongoose.model('Pedido', pedidoSchema);
