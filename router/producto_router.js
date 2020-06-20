@@ -166,6 +166,9 @@ app.delete('/:id', async(req, res) => {
             });
         }
         await cloudinary.uploader.destroy(productoRemovida.public_id);
+        const categoriaEncontrada = await categoriaModel.findById(productoRemovida.id_categoria);
+        categoriaEncontrada.producto_number = categoriaEncontrada.producto_number - 1;
+        await categoriaEncontrada.save();
         return res.status(200).json({
             ok: true,
             mensaje: 'Producto eliminado correctamente',
