@@ -1,18 +1,11 @@
 const express = require('express')
 const mongoose = require('mongoose');
-const cloudinary = require('cloudinary').v2;
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
 console.log(process.env.NODE_ENV);
-
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET
-});
 
 //Inicializar Variables
 const app = express();
@@ -29,13 +22,8 @@ app.use((req, res, next) => {
 
 //Importar rutas
 
-// const usuarioRouter = require('./router/usuario_router');
 const appRouter = require('./router/app_router');
-const productoRouter = require('./router/producto_router');
-const loginRouter = require('./router/login_router');
-const pedidoRouter = require('./router/pedido_router');
-const distritoRouter = require('./router/distrito_router');
-const categoriaRouter = require('./router/categoria_router');
+const userRouter = require('./router/usuario_router');
 
 //conexion Base de datos
 
@@ -54,12 +42,7 @@ const categoriaRouter = require('./router/categoria_router');
 
 //Rutas
 
-// app.use('/usuario', usuarioRouter);
-app.use('/login', loginRouter);
-app.use('/producto', productoRouter);
-app.use('/categoria', categoriaRouter);
-app.use('/pedido', pedidoRouter);
-app.use('/distrito', distritoRouter);
+app.use('/user', userRouter);
 app.use('/', appRouter);
 
 // Iniciar servidor
