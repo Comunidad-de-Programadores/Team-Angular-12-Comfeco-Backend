@@ -84,7 +84,7 @@ app.post('/sendemail', async(req, res) => {
             to: body.email,
             from: 'origami.startup@gmail.com',
             subject: 'Comfeco app recuperacion de cuenta',
-            text: `Su token de recuperacion es ${token} y es valido por 2 minutos`,
+            text: `Su link de recuperacion es http://localhost:4200/cambiar-contraseña?token=${token} y es valido por 2 minutos`,
         };
         await sgMail.send(msg);
         res.status(200).json({
