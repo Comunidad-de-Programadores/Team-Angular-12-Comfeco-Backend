@@ -24,6 +24,8 @@ app.use((req, res, next) => {
 
 const appRouter = require('./router/app_router');
 const userRouter = require('./router/usuario_router');
+const communityRouter = require('./router/comnunity_router');
+const creatorRouter = require('./router/creator_router');
 
 //conexion Base de datos
 
@@ -43,6 +45,8 @@ const userRouter = require('./router/usuario_router');
 //Rutas
 
 app.use('/user', userRouter);
+app.use('/community', communityRouter);
+app.use('/creator', creatorRouter);
 app.use('/', appRouter);
 
 // Iniciar servidor
