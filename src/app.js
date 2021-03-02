@@ -1,5 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose');
+const cloudinary = require('cloudinary').v2;
+
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
@@ -7,6 +9,11 @@ if (process.env.NODE_ENV !== 'production') {
 
 console.log(process.env.NODE_ENV);
 
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+});
 //Inicializar Variables
 const app = express();
 app.use(express.json());

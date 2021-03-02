@@ -3,8 +3,17 @@ const app = express();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sgMail = require('@sendgrid/mail');
+const fileUpload = require('express-fileupload');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const cloudinary = require('cloudinary').v2;
 
+
+//Middelware
+const mdAutenticacion = require('../middlewares/autenticacion');
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+}));
 
 //Modelos
 const UserModel = require('../model/usuario_model');
@@ -139,5 +148,107 @@ app.post('/changePassword', async(req, res) => {
         });
     }
 });
+
+
+app.get('/', mdAutenticacion, async(req, res) => {
+    const idUser = req.decoded.usuario._id;
+    try {
+        const userFound = await UserModel.findById(idUser);
+        if (!userFound) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El usuario no exsiste',
+            });
+        }
+        return res.status(200).json({
+            ok: true,
+            userFound
+        });
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            mensaje: 'Error en la base de datos',
+            error: { message: error }
+        });
+    }
+})
+
+app.put('', mdAutenticacion, async(req, res) => {
+    const idUser = req.decoded.usuario._id;
+    const body = req.body;
+    try {
+        const userFound = await UserModel.findById(idUser);
+        if (!userFound) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El usuario no exsiste',
+            });
+        }
+        userFound.nick = body.nick;
+        userFound.gender = body.gender;
+        userFound.birthday = body.birthday;
+        userFound.country = body.country;
+        userFound.bibliography = body.bibliography;
+        userFound.socialNetwork = body.socialNetwork;
+        if (req.files.img) {
+            if (userFound.public_id === 'none' || userFound.public_id === undefined || userFound.public_id === '') {
+                const result = await cloudinary.uploader.upload(req.files.img.tempFilePath);
+                userFound.img = result.secure_url;
+                userFound.public_id = result.public_id;
+            } else {
+                const result = await cloudinary.uploader.upload(req.files.img.tempFilePath);
+                await cloudinary.uploader.destroy(userFound.public_id);
+                userFound.img = result.secure_url;
+                userFound.public_id = result.public_id;
+            }
+        }
+        const userSaved = await userFound.save();
+        return res.status(200).json({
+            ok: true,
+            userSaved
+        });
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            mensaje: 'Error en la base de datos',
+            error: { message: error }
+        });
+    }
+
+})
+
+app.post('/changePassword', mdAutenticacion, async(req, res) => {
+    const body = req.body;
+    const id = req.decoded.usuario._id;
+    try {
+        if (!body.newpassword) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El nuevo password es requerido',
+            });
+        }
+        const userFound = await UserModel.findById(id);
+        if (!userFound) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'No se encontro el usuario',
+                error: { message: 'No existe un usuario con ese id' }
+            });
+        }
+        userFound.password = bcrypt.hashSync(body.newpassword, 10)
+        await userFound.save();
+        return res.status(200).json({
+            ok: true,
+            mensaje: 'Contraseña actulizada correctamente',
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            mensaje: 'Error en la base de datos',
+            error: { message: error }
+        });
+    }
+})
 
 module.exports = app;
