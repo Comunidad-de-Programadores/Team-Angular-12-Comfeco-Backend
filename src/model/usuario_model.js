@@ -13,7 +13,7 @@ const usuarioSchema = new Schema({
     gender: { type: String, },
     birthday: { type: String },
     country: { type: String },
-    bibliography: { type: String },
+    biography: { type: String },
     socialNetwork: { type: Array }
 });
 
