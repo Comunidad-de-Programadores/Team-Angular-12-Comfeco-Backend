@@ -188,7 +188,7 @@ app.put('', mdAutenticacion, async(req, res) => {
         userFound.gender = body.gender;
         userFound.birthday = body.birthday;
         userFound.country = body.country;
-        userFound.bibliography = body.bibliography;
+        userFound.biography = body.biography;
         userFound.socialNetwork = body.socialNetwork;
         if (req.files.img) {
             if (userFound.public_id === 'none' || userFound.public_id === undefined || userFound.public_id === '') {
