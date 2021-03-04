@@ -8,7 +8,7 @@ const usuarioSchema = new Schema({
     nick: { type: String, required: [true, 'El nombre es requerido'] },
     email: { type: String, unique: true, required: [true, 'El correo es requerido'] },
     password: { type: String, unique: true, required: [true, 'La contraseña es requerido'] },
-    img: { type: String, required: [true, 'Imagen de perfil requerida'] },
+    img: { type: String },
     public_id: { type: String, default: 'none' },
     gender: { type: String, },
     birthday: { type: String },

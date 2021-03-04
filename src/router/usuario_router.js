@@ -190,7 +190,9 @@ app.put('', mdAutenticacion, async(req, res) => {
         userFound.country = body.country;
         userFound.biography = body.biography;
         userFound.socialNetwork = body.socialNetwork;
-        if (req.files.img) {
+        console.log('hola2');
+        if (req.files) {
+            console.log('hola');
             if (userFound.public_id === 'none' || userFound.public_id === undefined || userFound.public_id === '') {
                 const result = await cloudinary.uploader.upload(req.files.img.tempFilePath);
                 userFound.img = result.secure_url;
@@ -203,6 +205,7 @@ app.put('', mdAutenticacion, async(req, res) => {
             }
         }
         const userSaved = await userFound.save();
+
         return res.status(200).json({
             ok: true,
             userSaved
