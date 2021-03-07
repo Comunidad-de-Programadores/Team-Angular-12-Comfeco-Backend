@@ -220,7 +220,7 @@ app.put('', mdAutenticacion, async(req, res) => {
 
 })
 
-app.post('/changePassword', mdAutenticacion, async(req, res) => {
+app.put('/changePassword', mdAutenticacion, async(req, res) => {
     const body = req.body;
     const id = req.decoded.usuario._id;
     try {
