@@ -190,6 +190,7 @@ app.put('', mdAutenticacion, async(req, res) => {
         userFound.country = body.country;
         userFound.biography = body.biography;
         userFound.socialNetwork = body.socialNetwork;
+        userFound.knowledgeArea = body.knowledgeArea;
         console.log('hola2');
         if (req.files) {
             console.log('hola');

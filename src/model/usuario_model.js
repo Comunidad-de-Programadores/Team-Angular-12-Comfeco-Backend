@@ -14,7 +14,8 @@ const usuarioSchema = new Schema({
     birthday: { type: String },
     country: { type: String },
     biography: { type: String },
-    socialNetwork: { type: Array }
+    socialNetwork: { type: Array },
+    knowledgeArea: { type: String }
 });
 
 usuarioSchema.plugin(uniqueValidator, { menssage: '{PATH} debe ser único' });
