@@ -6,7 +6,7 @@ const sgMail = require('@sendgrid/mail');
 const fileUpload = require('express-fileupload');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const cloudinary = require('cloudinary').v2;
-
+const userUtil = require('../util/user_util');
 
 //Middelware
 const mdAutenticacion = require('../middlewares/autenticacion');
@@ -17,6 +17,7 @@ app.use(fileUpload({
 
 //Modelos
 const UserModel = require('../model/usuario_model');
+const InsigniaModel = require('../model/insignia_model');
 
 app.post('/login', async(req, res) => {
     const body = req.body;
@@ -176,6 +177,7 @@ app.get('/', mdAutenticacion, async(req, res) => {
 app.put('', mdAutenticacion, async(req, res) => {
     const idUser = req.decoded.usuario._id;
     const body = req.body;
+    console.log('owo');
     try {
         const userFound = await UserModel.findById(idUser);
         if (!userFound) {
@@ -191,9 +193,7 @@ app.put('', mdAutenticacion, async(req, res) => {
         userFound.biography = body.biography;
         userFound.socialNetwork = body.socialNetwork;
         userFound.knowledgeArea = body.knowledgeArea;
-        console.log('hola2');
         if (req.files) {
-            console.log('hola');
             if (userFound.public_id === 'none' || userFound.public_id === undefined || userFound.public_id === '') {
                 const result = await cloudinary.uploader.upload(req.files.img.tempFilePath);
                 userFound.img = result.secure_url;
@@ -204,6 +204,25 @@ app.put('', mdAutenticacion, async(req, res) => {
                 userFound.img = result.secure_url;
                 userFound.public_id = result.public_id;
             }
+        }
+        const resp = await userUtil.validarInsignia(0, idUser);
+        if (!resp) {
+            let boolInsignia = false;
+            let arrayAtribute = ['nick', 'gender', 'birthday', 'country', 'biography', 'knowledgeArea'];
+            // arrayAtribute = Object.keys(userFound.toJSON());
+            // console.log(userFound);
+            for (let index = 0; index < arrayAtribute.length; index++) {
+                if (userFound[arrayAtribute[index]] === undefined) {
+                    console.log(index);
+                    boolInsignia = true;
+                    break;
+                }
+            }
+            if (!boolInsignia) {
+                console.log('Guarde mi primera insignia');
+                await userUtil.saveInsignia(0, idUser);
+            }
+
         }
         const userSaved = await userFound.save();
 
@@ -246,6 +265,27 @@ app.put('/changePassword', mdAutenticacion, async(req, res) => {
             mensaje: 'Contraseña actulizada correctamente',
         });
 
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            mensaje: 'Error en la base de datos',
+            error: { message: error }
+        });
+    }
+})
+
+app.get('/:id/insignias', mdAutenticacion, async(req, res) => {
+    const idUser = req.params.id;
+    try {
+        let auxInsignias = [];
+        const misInsignias = await InsigniaModel.findOne({ owner: idUser });
+        if (misInsignias) {
+            auxInsignias = userUtil.getFilterInsignias(misInsignias.idsInsignia);
+        }
+        return res.status(200).json({
+            ok: true,
+            misInsignias: auxInsignias
+        });
     } catch (error) {
         return res.status(500).json({
             ok: false,

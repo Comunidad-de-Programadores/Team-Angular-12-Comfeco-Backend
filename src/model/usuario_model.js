@@ -10,7 +10,7 @@ const usuarioSchema = new Schema({
     password: { type: String, unique: true, required: [true, 'La contraseña es requerido'] },
     img: { type: String },
     public_id: { type: String, default: 'none' },
-    gender: { type: String, },
+    gender: { type: String },
     birthday: { type: String },
     country: { type: String },
     biography: { type: String },
