@@ -33,6 +33,7 @@ const appRouter = require('./router/app_router');
 const userRouter = require('./router/usuario_router');
 const communityRouter = require('./router/comnunity_router');
 const creatorRouter = require('./router/creator_router');
+const groupRouter = require('./router/group_router');
 
 //conexion Base de datos
 
@@ -54,6 +55,7 @@ const creatorRouter = require('./router/creator_router');
 app.use('/user', userRouter);
 app.use('/community', communityRouter);
 app.use('/creator', creatorRouter);
+app.use('/group', groupRouter);
 app.use('/', appRouter);
 
 // Iniciar servidor

@@ -18,7 +18,7 @@ app.use(fileUpload({
 //Modelos
 const UserModel = require('../model/usuario_model');
 const InsigniaModel = require('../model/insignia_model');
-
+const GroupModel = require('../model/group_model');
 app.post('/login', async(req, res) => {
     const body = req.body;
     const userFound = await UserModel.findOne({ email: body.email });
@@ -294,5 +294,36 @@ app.get('/:id/insignias', mdAutenticacion, async(req, res) => {
         });
     }
 })
+
+app.get('/:id/group', mdAutenticacion, async(req, res) => {
+    const id = req.params.id;
+    const idToken = req.decoded.usuario._id;
+    if (id !== idToken) {
+        return res.status(400).json({
+            ok: false,
+            mensaje: 'No tienes permiso para realizar esta accion',
+        });
+    }
+    try {
+        const userFound = await UserModel.findById(id);
+        if (!userFound.miInfoGroup) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'No tienes un grupo',
+            });
+        }
+        const listGroup = await GroupModel.findById(userFound.miInfoGroup.group_id).populate('integrantes').exec();
+        return res.status(200).json({
+            ok: true,
+            listGroup: listGroup
+        });
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            mensaje: 'Error en la base de datos',
+            error: { message: error }
+        });
+    }
+});
 
 module.exports = app;

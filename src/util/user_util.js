@@ -40,4 +40,5 @@ function getFilterInsignias(types) {
 }
 
 
+
 module.exports = { validarInsignia, saveInsignia, getFilterInsignias }

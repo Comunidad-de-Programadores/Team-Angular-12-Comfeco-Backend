@@ -3,7 +3,7 @@
          img: 'https://res.cloudinary.com/dgnyjce9p/image/upload/v1615414256/aprobado_avtypt.png',
          name: 'Sociable',
          description: 'Todos quieren conocerte',
-         howtoWin: 'Debes completar tu perfil completamente, los campos de redes sociales puede ser ocpional'
+         howtoWin: 'Debes completar tu perfil completamente, los campos de redes sociales puede ser opcional'
      },
      {
          id: 1,
