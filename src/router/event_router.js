@@ -83,7 +83,7 @@ app.post('/:id/join', mdAutenticacion, async(req, res) => {
         }
         await userFound.save();
         return res.status(200).json({
-            ok: false,
+            ok: true,
             mensaje: 'Te unistes al evento correctamente',
             user: userFound
         });
@@ -132,7 +132,7 @@ app.post('/:id/out', mdAutenticacion, async(req, res) => {
         if (statusMap) {
             await userFound.save();
             return res.status(200).json({
-                ok: false,
+                ok: true,
                 mensaje: 'Fuistes retirado del evento correctamente',
                 user: userFound
             });
