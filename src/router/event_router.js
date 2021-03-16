@@ -8,13 +8,38 @@ const EventModel = require('../model/event_model');
 const UserModel = require('../model/usuario_model');
 
 app.get('', mdAutenticacion, async(req, res) => {
+    const id = req.decoded.usuario._id;
     try {
-        const listEvent = await EventModel.find();
+        const userFound = await UserModel.findById(id);
+        let listEvent = await EventModel.find();
+        listEvent = JSON.parse(JSON.stringify(listEvent));
         console.log(listEvent);
-        return res.status(200).json({
-            ok: true,
-            listEvent: listEvent
-        });
+        console.log(userFound);
+        if (!userFound.miInfoEvent || userFound.miInfoEvent.length === 0) {
+            return res.status(200).json({
+                ok: true,
+                listEvent: listEvent
+            });
+        } else {
+            for (let index = 0; index < listEvent.length; index++) {
+                for (let i = 0; i < userFound.miInfoEvent.length; i++) {
+                    if (userFound.miInfoEvent[i].event_id.toString() === listEvent[index]._id.toString() && userFound.miInfoEvent[i].status == 0) {
+                        console.log('join');
+                        listEvent[index]['join'] = true;
+                    }
+                }
+            }
+            return res.status(200).json({
+                ok: true,
+                listEvent: listEvent
+            });
+        }
+
+
+        // return res.status(200).json({
+        //     ok: true,
+        //     listEvent: listEvent
+        // });
     } catch (error) {
         return res.status(500).json({
             ok: false,
