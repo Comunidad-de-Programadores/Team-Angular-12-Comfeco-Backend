@@ -34,6 +34,7 @@ const userRouter = require('./router/usuario_router');
 const communityRouter = require('./router/comnunity_router');
 const creatorRouter = require('./router/creator_router');
 const groupRouter = require('./router/group_router');
+const eventRouter = require('./router/event_router');
 
 //conexion Base de datos
 
@@ -55,6 +56,7 @@ const groupRouter = require('./router/group_router');
 app.use('/user', userRouter);
 app.use('/community', communityRouter);
 app.use('/creator', creatorRouter);
+app.use('/event', eventRouter);
 app.use('/group', groupRouter);
 app.use('/', appRouter);
 

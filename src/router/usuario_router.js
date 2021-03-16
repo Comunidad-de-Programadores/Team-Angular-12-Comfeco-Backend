@@ -19,6 +19,7 @@ app.use(fileUpload({
 const UserModel = require('../model/usuario_model');
 const InsigniaModel = require('../model/insignia_model');
 const GroupModel = require('../model/group_model');
+const EventModel = require('../model/event_model');
 app.post('/login', async(req, res) => {
     const body = req.body;
     const userFound = await UserModel.findOne({ email: body.email });
@@ -315,7 +316,7 @@ app.get('/:id/group', mdAutenticacion, async(req, res) => {
         const listGroup = await GroupModel.findById(userFound.miInfoGroup.group_id).populate('integrantes').exec();
         return res.status(200).json({
             ok: true,
-            listGroup: listGroup
+            listGroup: listGroup ? listGroup : []
         });
     } catch (error) {
         return res.status(500).json({
@@ -325,5 +326,48 @@ app.get('/:id/group', mdAutenticacion, async(req, res) => {
         });
     }
 });
+app.get('/:id/event', mdAutenticacion, async(req, res) => {
+    const id = req.params.id;
+    const idToken = req.decoded.usuario._id;
+    if (id !== idToken) {
+        return res.status(400).json({
+            ok: false,
+            mensaje: 'No tienes permiso para realizar esta accion',
+        });
+    }
+    try {
+        const userFound = await UserModel.findById(id);
+        console.log(userFound.miInfoEvent);
+        if (!userFound.miInfoEvent || userFound.miInfoEvent.length === 0) {
+            return res.status(200).json({
+                ok: true,
+                listEvent: []
+            });
+        }
+        let listEventAuxId = [];
+        console.log(listEventAuxId);
+        userFound.miInfoEvent.forEach((e) => {
+            console.log(e.status);
+            if (e.status == 0) {
+                listEventAuxId.push(e.event_id)
+            }
+        });
+        const listEvent = await EventModel.find({
+            '_id': {
+                $in: listEventAuxId
+            }
+        })
+        return res.status(200).json({
+            ok: true,
+            listEvent
+        });
 
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            mensaje: 'Error en la base de datos',
+            error: { message: error }
+        });
+    }
+})
 module.exports = app;

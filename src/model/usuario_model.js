@@ -5,7 +5,12 @@ const Schema = mongoose.Schema;
 const miInfoGroup = new Schema({
     group_id: { type: mongoose.ObjectId },
     type: { type: Number } // 0 = integrante ; 1 = lider
-}, { _id: false, default: -1 });
+}, { _id: false });
+
+const miInfoEvent = new Schema({
+    event_id: { type: mongoose.ObjectId },
+    status: { type: Number } // 0 = ACTIVO , 1 == BANEADO
+}, { _id: false });
 
 const usuarioSchema = new Schema({
     nick: { type: String, required: [true, 'El nombre es requerido'] },
@@ -19,7 +24,8 @@ const usuarioSchema = new Schema({
     biography: { type: String },
     socialNetwork: { type: Array },
     knowledgeArea: { type: String },
-    miInfoGroup: miInfoGroup
+    miInfoGroup: miInfoGroup,
+    miInfoEvent: [miInfoEvent],
 });
 
 usuarioSchema.plugin(uniqueValidator, { menssage: '{PATH} debe ser único' });
