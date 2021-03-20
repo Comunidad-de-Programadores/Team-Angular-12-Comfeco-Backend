@@ -88,9 +88,9 @@ app.post('/:id/join', mdAutenticacion, async(req, res) => {
             type: 0
         }
         userFound['miInfoGroup'] = aux;
-        const resp = await userUtil.validarInsignia(1, id);
+        const resp = await userUtil.validarInsignia(2, id);
         if (!resp) {
-            await userUtil.saveInsignia(1, id);
+            await userUtil.saveInsignia(2, id);
             console.log('Guarde mi segunda insignia');
         }
         await userFound.save();

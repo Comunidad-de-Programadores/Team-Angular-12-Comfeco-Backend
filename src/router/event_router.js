@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const userUtil = require('../util/user_util');
+
 //Middelware
 const mdAutenticacion = require('../middlewares/autenticacion');
 
@@ -107,6 +109,13 @@ app.post('/:id/join', mdAutenticacion, async(req, res) => {
             userFound.miInfoEvent.push(aux);
         }
         await userFound.save();
+        //Guardar Insignia
+        const resp = await userUtil.validarInsignia(1, id);
+        if (!resp) {
+            await userUtil.saveInsignia(1, id);
+            console.log('Guarde mi segunda insignia');
+        }
+        // Fin Guardar Insignia
         return res.status(200).json({
             ok: true,
             mensaje: 'Te unistes al evento correctamente',
