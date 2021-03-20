@@ -209,11 +209,11 @@ app.put('', mdAutenticacion, async(req, res) => {
         const resp = await userUtil.validarInsignia(0, idUser);
         if (!resp) {
             let boolInsignia = false;
-            let arrayAtribute = ['nick', 'gender', 'birthday', 'country', 'biography', 'knowledgeArea'];
+            let arrayAtribute = ['nick', 'gender', 'birthday', 'country', 'biography', 'knowledgeArea', 'socialNetwork'];
             // arrayAtribute = Object.keys(userFound.toJSON());
             // console.log(userFound);
             for (let index = 0; index < arrayAtribute.length; index++) {
-                if (userFound[arrayAtribute[index]] === undefined) {
+                if (userFound[arrayAtribute[index]] === undefined || userFound[arrayAtribute[index].length == 0]) {
                     console.log(index);
                     boolInsignia = true;
                     break;

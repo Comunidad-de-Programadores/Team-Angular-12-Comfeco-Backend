@@ -26,6 +26,7 @@ const usuarioSchema = new Schema({
     knowledgeArea: { type: String },
     miInfoGroup: miInfoGroup,
     miInfoEvent: [miInfoEvent],
+    idPush: { type: String }
 });
 
 usuarioSchema.plugin(uniqueValidator, { menssage: '{PATH} debe ser único' });
