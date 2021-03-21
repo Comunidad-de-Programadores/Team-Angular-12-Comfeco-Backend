@@ -95,7 +95,7 @@ app.post('/sendemail', async(req, res) => {
             to: body.email,
             from: 'origami.startup@gmail.com',
             subject: 'Comfeco app recuperacion de cuenta',
-            html: `Su link de recuperacion es <a href="http://localhost:4200/cambiar-contraseña?token=${token}" > Click aqui  </a>y es valido por 2 minutos`,
+            html: `Su link de recuperacion es <a href="https://comfecopriv.web.app/auth/cambiar-contrasena?token=${token}" > Click aqui  </a>y es valido por 2 minutos`,
         };
         await sgMail.send(msg);
         res.status(200).json({
